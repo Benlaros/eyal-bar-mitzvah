@@ -6,9 +6,8 @@
   <title>בר המצווה של אייל | 10.8.2026</title>
   <meta name="description" content="הזמנה לבר המצווה של אייל, יום שני 10.8.2026, כ&quot;ז באב תשפ&quot;ו. עלייה לתורה בבית הכנסת בהר אדר וארוחת צהריים במסעדת עלאש גריל במודיעין.">
   <meta name="theme-color" content="#FAF8F2">
-  <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://eyal-bar-mitzvah.vercel.app/">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -22,153 +21,70 @@
   <meta name="twitter:title" content="בר המצווה של אייל">
   <meta name="twitter:description" content="10.8.2026 | כ&quot;ז באב תשפ&quot;ו">
   <meta name="twitter:image" content="https://eyal-bar-mitzvah.vercel.app/assets/og-image.svg">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": "בר המצווה של אייל",
-    "description": "עלייה לתורה בבית הכנסת בהר אדר וארוחת צהריים במסעדת עלאש גריל.",
-    "startDate": "2026-08-10T09:30:00+03:00",
-    "endDate": "2026-08-10T15:00:00+03:00",
-    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "inLanguage": "he",
-    "location": [
-      {
-        "@type": "Place",
-        "name": "בית הכנסת",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "הר אדר",
-          "addressCountry": "IL"
-        }
-      },
-      {
-        "@type": "Place",
-        "name": "מסעדת עלאש גריל",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "שדרות הרכס 13",
-          "addressLocality": "מודיעין",
-          "addressCountry": "IL"
-        }
-      }
-    ],
-    "organizer": {
-      "@type": "Person",
-      "name": "אייל"
-    },
-    "url": "https://eyal-bar-mitzvah.vercel.app/"
-  }
-  </script>
 </head>
 <body>
-  <main class="page-shell">
-    <article class="invitation" aria-labelledby="main-title">
-      <span class="corner corner-a" aria-hidden="true"></span>
-      <span class="corner corner-b" aria-hidden="true"></span>
-      <span class="corner corner-c" aria-hidden="true"></span>
-      <span class="corner corner-d" aria-hidden="true"></span>
-      <span class="sprig sprig-a" aria-hidden="true"></span>
-      <span class="sprig sprig-b" aria-hidden="true"></span>
-      <span class="sprig sprig-c" aria-hidden="true"></span>
-      <span class="sprig sprig-d" aria-hidden="true"></span>
-
+  <main class="stage">
+    <article class="card" aria-labelledby="title">
+      <div class="gold-frame" aria-hidden="true"></div>
       <header class="hero">
-        <div class="top-ornament" aria-hidden="true">
-          <span></span>
-          <div class="crown">
-          <svg viewBox="0 0 120 72" role="img" aria-label="">
-            <path d="M13 58h94v8H13zM21 51 14 17l27 23L60 10l19 30 27-23-7 34z" fill="currentColor"/>
-            <circle cx="14" cy="16" r="5" fill="currentColor"/>
-            <circle cx="60" cy="9" r="5" fill="currentColor"/>
-            <circle cx="106" cy="16" r="5" fill="currentColor"/>
-          </svg>
-          </div>
-          <span></span>
-        </div>
-        <div class="flourish" aria-hidden="true">༺ ༣ ༻</div>
-
-        <blockquote class="quote">
-          <span>״צדק צדק תרדוף״</span>
-          <span>״למען תחיה וירשת את הארץ״</span>
+        <div class="crown" aria-hidden="true">♛</div>
+        <blockquote>
+          <span>״צדק צדק תרדוף</span>
+          <span>למען תחיה וירשת את הארץ„</span>
+          <cite>פרשת שופטים</cite>
         </blockquote>
-
-        <div class="mini-divider" aria-hidden="true"><span></span></div>
-
-        <p class="pretitle">בר המצווה</p>
-        <p class="of">של</p>
-        <h1 id="main-title">אייל</h1>
-        <div class="lower-crown" aria-hidden="true">♛</div>
+        <div class="rule" aria-hidden="true"></div>
+        <p class="kicker">בר המצווה של</p>
+        <h1 id="title" class="name-mark">
+          <span>אייל</span>
+          <img src="assets/eyal-script.png" alt="" aria-hidden="true">
+        </h1>
         <p class="date">10/8/2026</p>
-        <p class="hebrew-date">כ&quot;ז באב תשפ&quot;ו</p>
-        <p class="countdown" id="countdown" aria-live="polite"></p>
+        <p class="hebrew-date">כ״ז באב תשפ״ו</p>
+        <p id="countdown" class="countdown"></p>
       </header>
 
       <section class="timeline" aria-label="לוח זמנים">
-        <section class="event-block" aria-labelledby="torah-title">
-          <div class="event-mark synagogue" aria-hidden="true">
-            <svg viewBox="0 0 96 96"><path d="M18 76V38l30-18 30 18v38H18Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M34 76V55a14 14 0 0 1 28 0v21M30 43h8v18h-8zM58 43h8v18h-8zM48 21v-8M42 15h12" fill="none" stroke="currentColor" stroke-width="4"/><path d="m48 35 4 7 8 1-6 5 2 8-8-4-8 4 2-8-6-5 8-1z" fill="none" stroke="currentColor" stroke-width="2.8"/></svg>
-          </div>
-          <div class="event-copy">
+        <div class="event">
+          <div class="medallion" aria-hidden="true">✡</div>
+          <div>
             <time datetime="2026-08-10T09:30:00+03:00">9:30</time>
-            <h2 id="torah-title">עלייה לתורה</h2>
-            <p>בית הכנסת</p>
-            <p>בהר אדר</p>
+            <h2>עלייה לתורה</h2>
+            <p>בית הכנסת<br>בהר אדר</p>
+            <a class="action waze" href="https://waze.com/ul/hsv8vp3t9r">📍 פתח ב-Waze</a>
           </div>
-        </section>
-
-        <div class="divider small" aria-hidden="true"></div>
-
-        <section class="event-block" aria-labelledby="lunch-title">
-          <div class="event-mark lunch" aria-hidden="true">
-            <svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="22" fill="none" stroke="currentColor" stroke-width="4"/><path d="M18 20v25M25 20v25M32 20v25M25 45v31M72 20c-10 9-12 23-5 32l5 6v18" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
-          </div>
-          <div class="event-copy">
+        </div>
+        <div class="event">
+          <div class="medallion" aria-hidden="true">🍽</div>
+          <div>
             <time datetime="2026-08-10T12:30:00+03:00">12:30</time>
-            <h2 id="lunch-title">ארוחת צהריים</h2>
-            <p>מסעדת עלאש גריל</p>
-            <p>שד׳ הרכס 13, מודיעין</p>
+            <h2>ארוחת צהריים</h2>
+            <p>מסעדת עלאש גריל<br>שד׳ הרכס 13, מודיעין</p>
+            <a class="action waze" href="https://waze.com/ul/hsv8vs5rw7">📍 פתח ב-Waze</a>
           </div>
-        </section>
+        </div>
       </section>
 
-      <footer class="closing">
-        <div class="heart-divider" aria-hidden="true"><span>♥</span></div>
-        <p class="glad">נשמח לראותכם</p>
-        <p class="names">אביב, אסף, הילה, בן ואייל</p>
-
-        <section class="waze-panel" aria-label="ניווט">
-          <div class="waze-copy">
-            <span class="waze-face" aria-hidden="true">☻</span>
-            <div>
-              <strong>ניווט בקלות!</strong>
-              <p>לחצו על יעד לצפייה<br>בניווט ב-Waze</p>
-            </div>
+      <section class="tools" aria-label="פעולות להזמנה">
+        <button id="shareButton" class="action">שתף ב-WhatsApp</button>
+        <details class="calendar">
+          <summary class="action">📅 הוסף ליומן</summary>
+          <div class="calendar-menu">
+            <a id="appleCalendar" href="#" download="eyal-bar-mitzvah.ics">Apple Calendar</a>
+            <a id="googleCalendar" href="#" target="_blank" rel="noopener">Google Calendar</a>
+            <a id="outlookCalendar" href="#" target="_blank" rel="noopener">Outlook</a>
           </div>
-          <a class="destination nav-button" href="https://waze.com/ul/hsv8vs5rw7">
-            <span aria-hidden="true">🍴</span>
-            <strong>למסעדה</strong>
-            <small>עלאש גריל<br>מודיעין</small>
-          </a>
-          <a class="destination nav-button" href="https://waze.com/ul/hsv8vp3t9r">
-            <span aria-hidden="true">⌂</span>
-            <strong>לבית הכנסת</strong>
-            <small>בהר אדר</small>
-          </a>
-        </section>
+        </details>
+      </section>
 
-        <section class="actions" aria-label="פעולות">
-          <button class="soft-action" type="button" id="shareButton">שתף</button>
-          <a class="soft-action" id="appleCalendar" href="#" download="eyal-bar-mitzvah.ics">Apple</a>
-          <a class="soft-action" id="googleCalendar" href="#" target="_blank" rel="noopener">Google</a>
-          <a class="soft-action" id="outlookCalendar" href="#" target="_blank" rel="noopener">Outlook</a>
-          <a class="soft-action" id="icsDownload" href="#" download="eyal-bar-mitzvah.ics">ICS</a>
-        </section>
-        <img id="qrCode" class="qr" width="70" height="70" alt="קוד QR לאתר ההזמנה" loading="lazy">
+      <footer>
+        <div class="rule short" aria-hidden="true"></div>
+        <p class="glad">נשמח לראותכם</p>
+        <p>אביב, אסף, הילה, בן ואייל</p>
+        <img id="qrCode" alt="QR לאתר ההזמנה" width="82" height="82">
       </footer>
     </article>
   </main>
-  <script src="script.js?v=20260702-scale" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
