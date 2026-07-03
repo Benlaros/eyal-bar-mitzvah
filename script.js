@@ -4,8 +4,6 @@
   const text="נשמח לראותכם בבר המצווה של אייל, 10/8/2026";
   const startUtc="20260810T063000Z";
   const endUtc="20260810T120000Z";
-  const startIso="2026-08-10T09:30:00+03:00";
-  const endIso="2026-08-10T15:00:00+03:00";
   const details="עלייה לתורה בבית הכנסת בהר אדר בשעה 9:30, ולאחר מכן ארוחת צהריים במסעדת עלאש גריל, שד׳ הרכס 13, מודיעין בשעה 12:30.";
   const locationText="בית הכנסת, הר אדר; מסעדת עלאש גריל, שד׳ הרכס 13, מודיעין";
   const enc=encodeURIComponent;
@@ -35,13 +33,9 @@
     const apple=document.getElementById("appleCalendar");
     if(apple)apple.href=blobUrl;
 
-    const googleUrl=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${enc(title)}&dates=${startUtc}/${endUtc}&details=${enc(details+" "+site)}&location=${enc(locationText)}&ctz=Asia/Jerusalem`;
-    const outlookUrl=`https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&subject=${enc(title)}&body=${enc(details+" "+site)}&location=${enc(locationText)}&startdt=${enc(startIso)}&enddt=${enc(endIso)}`;
-
+    const googleUrl=`https://calendar.google.com/calendar/u/0/r/eventedit?text=${enc(title)}&dates=${startUtc}/${endUtc}&details=${enc(details+" "+site)}&location=${enc(locationText)}&ctz=Asia/Jerusalem`;
     const google=document.getElementById("googleCalendar");
-    const outlook=document.getElementById("outlookCalendar");
     if(google){google.href=googleUrl;google.removeAttribute("target");google.addEventListener("click",e=>{e.preventDefault();location.href=googleUrl;});}
-    if(outlook){outlook.href=outlookUrl;outlook.removeAttribute("target");outlook.addEventListener("click",e=>{e.preventDefault();location.href=outlookUrl;});}
   }
 
   function setShare(){
@@ -56,20 +50,39 @@
     });
   }
 
-  function setWaze(){
-    document.querySelectorAll("[data-waze-app]").forEach(link=>{
-      link.addEventListener("click",e=>{
-        const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if(!isMobile)return;
-        e.preventDefault();
-        const appUrl=link.dataset.wazeApp;
-        const webUrl=link.dataset.wazeWeb||link.href;
-        let opened=false;
-        const markOpened=()=>{opened=true};
-        document.addEventListener("visibilitychange",markOpened,{once:true});
-        window.addEventListener("pagehide",markOpened,{once:true});
-        location.href=appUrl;
-        setTimeout(()=>{if(!opened)location.href=webUrl},1400);
+  function openWaze(appUrl,webUrl){
+    const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(!isMobile){location.href=webUrl;return}
+    let opened=false;
+    const markOpened=()=>{opened=true};
+    document.addEventListener("visibilitychange",markOpened,{once:true});
+    window.addEventListener("pagehide",markOpened,{once:true});
+    location.href=appUrl;
+    setTimeout(()=>{if(!opened)location.href=webUrl},1400);
+  }
+
+  function setNavigation(){
+    const dialog=document.getElementById("navDialog");
+    const place=document.getElementById("navDialogPlace");
+    const waze=document.getElementById("navWaze");
+    const google=document.getElementById("navGoogle");
+    const apple=document.getElementById("navApple");
+    if(!dialog||!place||!waze||!google||!apple)return;
+
+    document.querySelectorAll("[data-nav-query]").forEach(button=>{
+      button.addEventListener("click",()=>{
+        const query=button.dataset.navQuery;
+        const label=button.dataset.navLabel||query;
+        const encoded=enc(query);
+        const wazeApp=`waze://?q=${encoded}&navigate=yes`;
+        const wazeWeb=`https://waze.com/ul?q=${encoded}&navigate=yes&utm_source=eyal_bar_mitzvah`;
+        place.textContent=label;
+        waze.href=wazeWeb;
+        google.href=`https://www.google.com/maps/search/?api=1&query=${encoded}`;
+        apple.href=`https://maps.apple.com/?q=${encoded}`;
+        waze.onclick=e=>{e.preventDefault();dialog.close();openWaze(wazeApp,wazeWeb)};
+        if(typeof dialog.showModal==="function")dialog.showModal();
+        else dialog.setAttribute("open","");
       });
     });
   }
@@ -82,6 +95,6 @@
   setCountdown();
   setCalendars();
   setShare();
-  setWaze();
+  setNavigation();
   setQr();
 })();
