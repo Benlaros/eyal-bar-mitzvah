@@ -6,7 +6,7 @@
   <title>אישורי הגעה | אייל</title>
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#FAF8F2">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260703-admin">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="admin-body">
@@ -42,13 +42,14 @@
         </div>
         <div class="admin-actions">
           <button id="refreshRsvps" class="action" type="button">רענן</button>
+          <button id="exportRsvps" class="action" type="button">ייצוא CSV</button>
           <button id="signOut" class="action" type="button">יציאה</button>
         </div>
         <div id="rsvpList" class="rsvp-list" aria-live="polite"></div>
       </section>
     </section>
   </main>
-  <script src="supabase-config.js?v=20260703-pw"></script>
-  <script src="admin.js?v=20260703-pw"></script>
+  <script src="supabase-config.js?v=20260703-admin"></script>
+  <script src="admin.js?v=20260703-admin"></script>
 </body>
 </html>

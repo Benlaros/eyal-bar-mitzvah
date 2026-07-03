@@ -110,6 +110,11 @@ footer .glad{font-size:30px;color:var(--gold);margin-top:12px}
 .rsvp-item span,.rsvp-item time{color:#8f6e3f;font:700 13px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif}
 .rsvp-item p{margin:10px 0 0;font-size:15px}
 .empty-list{text-align:center;color:#8f6e3f;font:700 15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.rsvp-item .rsvp-item-actions{justify-content:flex-end;gap:8px;margin-top:10px}
+.row-action{border:1px solid rgba(175,138,71,.52);border-radius:8px;background:rgba(255,253,248,.72);color:#8f6e3f;font:700 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;padding:8px 14px;cursor:pointer}
+.row-action:hover{border-color:var(--gold);color:var(--navy)}
+.row-action-danger{color:#9b2c2c}
+.rsvp-edit-form{margin-top:0}
 
 @media(max-width:620px){
   .admin-stage{padding:0}
