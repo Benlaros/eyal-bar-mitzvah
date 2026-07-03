@@ -183,6 +183,7 @@
     const google=document.getElementById("navGoogle");
     const apple=document.getElementById("navApple");
     if(!dialog||!place||!waze||!google||!apple)return;
+    if(!/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent))apple.hidden=true;
 
     document.querySelectorAll("[data-nav-query]").forEach(button=>{
       button.addEventListener("click",()=>{
