@@ -16,6 +16,7 @@
   const guestList=document.getElementById("guestList");
   const guestControls=document.getElementById("guestControls");
   const groupFilter=document.getElementById("groupFilter");
+  const statusFilter=document.getElementById("statusFilter");
   const invitedTotal=document.getElementById("invitedTotal");
   const guestTotal=document.getElementById("guestTotal");
   const pendingTotal=document.getElementById("pendingTotal");
@@ -284,7 +285,11 @@
     currentRows.forEach(r=>{
       if(r.guest_id)linkedCounts[r.guest_id]=(linkedCounts[r.guest_id]||0)+Number(r.guest_count||0);
     });
-    const shown=guests.filter(g=>!filter||g.group_name===filter);
+    const status=statusFilter.value;
+    const shown=guests.filter(g=>
+      (!filter||g.group_name===filter)&&
+      (!status||(status==="confirmed"?linkedCounts[g.id]!=null:linkedCounts[g.id]==null))
+    );
     if(!shown.length){
       const empty=document.createElement("p");
       empty.className="empty-list";
@@ -487,6 +492,7 @@
     guestList.prepend(renderGuestEditor({},null));
   });
   groupFilter.addEventListener("change",renderGuests);
+  statusFilter.addEventListener("change",renderGuests);
   signOut.addEventListener("click",()=>{
     sessionStorage.removeItem(authKey);
     rsvpPanel.hidden=true;

@@ -6,7 +6,7 @@
   <title>אישורי הגעה | אייל</title>
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#FAF8F2">
-  <link rel="stylesheet" href="style.css?v=20260703-guests">
+  <link rel="stylesheet" href="style.css?v=20260703-filters">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="admin-body">
@@ -57,12 +57,17 @@
         <div id="rsvpList" class="rsvp-list" aria-live="polite"></div>
         <div id="guestControls" class="admin-actions" hidden>
           <select id="groupFilter" class="guest-filter"></select>
+          <select id="statusFilter" class="guest-filter">
+            <option value="">כל הסטטוסים</option>
+            <option value="confirmed">אישרו</option>
+            <option value="pending">לא ענו</option>
+          </select>
         </div>
         <div id="guestList" class="rsvp-list" aria-live="polite" hidden></div>
       </section>
     </section>
   </main>
-  <script src="supabase-config.js?v=20260703-guests"></script>
-  <script src="admin.js?v=20260703-guests"></script>
+  <script src="supabase-config.js?v=20260703-filters"></script>
+  <script src="admin.js?v=20260703-filters"></script>
 </body>
 </html>
