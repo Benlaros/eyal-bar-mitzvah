@@ -42,7 +42,11 @@
     const now=new Date();
     const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     const days=Math.ceil((new Date(2026,7,10)-today)/86400000);
-    el.textContent=days>=0?`נותרו ${days} ימים`:"תודה שבאתם ❤️";
+    if(days>=0){
+      el.innerHTML=`ממשיכים לספור את הימים...<strong>אגב, זה בעוד ${days} יום</strong>`;
+    }else{
+      el.textContent="תודה שבאתם";
+    }
   }
 
   function ics(){

@@ -24,8 +24,9 @@ blockquote cite{display:block;margin-top:7px;color:#8f6e3f;font:600 15px/1.2 sys
 .name-mark span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .name-mark img{display:block;width:100%;height:auto;margin:auto;mix-blend-mode:multiply}
 .date{display:inline-block;margin:8px 0 8px;padding:12px 46px;border:1px solid var(--gold);border-radius:10px;background:var(--navy);color:#fff;font:700 44px/1 Georgia,serif;box-shadow:0 1px 0 rgba(175,138,71,.45)}
-.hebrew-date,.countdown{margin:4px 0;color:var(--navy);font-size:23px}
-.countdown{color:#8f6e3f;font-weight:700;font-size:16px}
+.hebrew-date{margin:4px 0;color:var(--navy);font-size:23px}
+.countdown{margin:16px auto 0;color:#8f6e3f;font:500 14px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif}
+.countdown strong{display:block;color:var(--navy);font-weight:700}
 .timeline{display:grid;gap:16px;max-width:560px;margin:34px auto 28px}
 .event{direction:ltr;display:grid;grid-template-columns:96px 1fr;gap:24px;align-items:center;width:100%;padding:14px 18px;border:1px solid rgba(175,138,71,.5);border-radius:10px;background:rgba(255,253,248,.5);color:inherit;text-align:right;cursor:pointer;box-shadow:none;transition:border-color .18s ease,background-color .18s ease,transform .18s ease}
 .event:hover,.event:focus-visible{border-color:var(--gold);background:rgba(255,253,248,.8);transform:translateY(-1px);outline:none}
