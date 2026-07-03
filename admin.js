@@ -157,7 +157,7 @@
     const count=document.createElement("span");
     const date=document.createElement("time");
     name.textContent=row.guest_name;
-    count.textContent=`${row.guest_count} אורחים`;
+    count.textContent=`${row.guest_count} אורחים${row.rsvp_group?` · ${row.rsvp_group}`:""}`;
     date.dateTime=row.created_at;
     date.textContent=new Intl.DateTimeFormat("he-IL",{dateStyle:"short",timeStyle:"short"}).format(new Date(row.created_at));
     top.append(name,count);
@@ -472,7 +472,7 @@
     if(!token())return;
     try{
       const [rsvpRes,guestRes]=await Promise.all([
-        api("/rest/v1/eyal_rsvps?select=id,guest_name,guest_count,note,created_at,guest_id&order=created_at.desc",{headers:authHeaders()}),
+        api("/rest/v1/eyal_rsvps?select=id,guest_name,guest_count,note,created_at,guest_id,rsvp_group&order=created_at.desc",{headers:authHeaders()}),
         api("/rest/v1/eyal_guests?select=id,guest_name,phone,group_name,invited_count,note&order=group_name.asc,guest_name.asc",{headers:authHeaders()})
       ]);
       currentRows=await rsvpRes.json();

@@ -105,8 +105,10 @@
     const name=form.guest_name.value.trim();
     const count=Number(form.guest_count.value);
     const note=form.note.value.trim();
+    const group=form.rsvp_group.value;
+    const allowedGroups=["משפחה","חברים של המשפחה","חברים של אייל"];
     status.classList.remove("is-error");
-    if(!name||name.length>120||!Number.isInteger(count)||count<1||count>20||note.length>500){
+    if(!name||name.length>120||!Number.isInteger(count)||count<1||count>20||note.length>500||!allowedGroups.includes(group)){
       status.textContent="כדאי לבדוק את השם וכמות האורחים.";
       status.classList.add("is-error");
       return;
@@ -122,7 +124,7 @@
           "Content-Type":"application/json",
           Prefer:"return=minimal"
         },
-        body:JSON.stringify({guest_name:name,guest_count:count,note:note||null})
+        body:JSON.stringify({guest_name:name,guest_count:count,note:note||null,rsvp_group:group})
       });
       if(!res.ok)throw new Error("insert failed");
       form.reset();

@@ -63,9 +63,9 @@ p{font-size:20px;line-height:1.45;margin:6px 0}
 .rsvp-dialog{width:min(92vw,410px)}
 .rsvp-sheet{display:grid;gap:10px}
 .rsvp-sheet label,.admin-form label{display:grid;gap:6px;text-align:right;color:var(--navy);font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}
-.rsvp-sheet input,.rsvp-sheet textarea,.admin-form input{width:100%;border:1px solid rgba(175,138,71,.58);border-radius:10px;background:rgba(255,255,255,.72);color:var(--navy);font:600 16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;padding:11px 12px;outline:none}
+.rsvp-sheet input,.rsvp-sheet textarea,.rsvp-sheet select,.admin-form input{width:100%;border:1px solid rgba(175,138,71,.58);border-radius:10px;background:rgba(255,255,255,.72);color:var(--navy);font:600 16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;padding:11px 12px;outline:none}
 .rsvp-sheet textarea{resize:vertical}
-.rsvp-sheet input:focus,.rsvp-sheet textarea:focus,.admin-form input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(175,138,71,.12)}
+.rsvp-sheet input:focus,.rsvp-sheet textarea:focus,.rsvp-sheet select:focus,.admin-form input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(175,138,71,.12)}
 .form-status{min-height:22px;margin:2px 0 0;color:var(--gold);font:700 13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 .form-status.is-error{color:#9b2c2c}
 footer{margin-top:30px}
