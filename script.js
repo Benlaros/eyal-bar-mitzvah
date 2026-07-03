@@ -181,13 +181,14 @@
       button.addEventListener("click",()=>{
         const query=button.dataset.navQuery;
         const label=button.dataset.navLabel||query;
+        const ll=button.dataset.navLl;
         const encoded=enc(query);
-        const wazeApp=`waze://?q=${encoded}&navigate=yes`;
-        const wazeWeb=`https://waze.com/ul?q=${encoded}&navigate=yes&utm_source=eyal_bar_mitzvah`;
+        const wazeApp=ll?`waze://?ll=${ll}&navigate=yes`:`waze://?q=${encoded}&navigate=yes`;
+        const wazeWeb=ll?`https://waze.com/ul?ll=${ll}&navigate=yes&utm_source=eyal_bar_mitzvah`:`https://waze.com/ul?q=${encoded}&navigate=yes&utm_source=eyal_bar_mitzvah`;
         place.textContent=label;
         waze.href=wazeWeb;
-        google.href=`https://www.google.com/maps/search/?api=1&query=${encoded}`;
-        apple.href=`https://maps.apple.com/?q=${encoded}`;
+        google.href=ll?`https://www.google.com/maps/search/?api=1&query=${ll}`:`https://www.google.com/maps/search/?api=1&query=${encoded}`;
+        apple.href=ll?`https://maps.apple.com/?ll=${ll}&q=${enc(label)}`:`https://maps.apple.com/?q=${encoded}`;
         waze.onclick=e=>{e.preventDefault();dialog.close();openWaze(wazeApp,wazeWeb)};
         if(typeof dialog.showModal==="function")dialog.showModal();
         else dialog.setAttribute("open","");
