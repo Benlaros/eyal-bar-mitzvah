@@ -35,7 +35,20 @@
 
     const googleUrl=`https://calendar.google.com/calendar/u/0/r/eventedit?text=${enc(title)}&dates=${startUtc}/${endUtc}&details=${enc(details+" "+site)}&location=${enc(locationText)}&ctz=Asia/Jerusalem`;
     const google=document.getElementById("googleCalendar");
-    if(google){google.href=googleUrl;google.removeAttribute("target");google.addEventListener("click",e=>{e.preventDefault();location.href=googleUrl;});}
+    if(google){
+      let lastTap=0;
+      const openGoogle=e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const now=Date.now();
+        if(now-lastTap<700)return;
+        lastTap=now;
+        const opened=window.open(googleUrl,"_blank","noopener");
+        if(!opened)location.href=googleUrl;
+      };
+      google.addEventListener("click",openGoogle);
+      google.addEventListener("touchend",openGoogle,{passive:false});
+    }
   }
 
   function setShare(){
