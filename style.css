@@ -1,67 +1,76 @@
-:root{--ivory:#faf8f2;--navy:#0a2a5e;--gold:#c5a15a;--ink:#102852}
+:root{--ivory:#faf8f2;--paper:#f6f0e4;--navy:#0a2a5e;--gold:#af8a47;--ink:#102852;--hairline:rgba(175,138,71,.72)}
 *{box-sizing:border-box}
 html,body{overflow-x:hidden}
-body{margin:0;background:#f5f1e8;color:var(--ink);font-family:"Noto Serif Hebrew","Frank Ruhl Libre","Times New Roman",serif}
+body{margin:0;background:#f2eadc;color:var(--ink);font-family:"Noto Serif Hebrew","Frank Ruhl Libre","Times New Roman",serif}
+body:before{position:fixed;inset:0;content:"";pointer-events:none;opacity:.45;background:radial-gradient(circle at 24% 18%,rgba(255,255,255,.8),transparent 24%),repeating-linear-gradient(98deg,rgba(10,42,94,.018) 0 1px,transparent 1px 6px),repeating-linear-gradient(8deg,rgba(175,138,71,.018) 0 1px,transparent 1px 9px)}
+.opening-quote{position:fixed;inset:0;z-index:20;display:grid;place-content:center;gap:8px;text-align:center;background:var(--ivory);color:var(--navy);font-size:clamp(28px,5vw,50px);line-height:1.55;animation:quoteReveal 1800ms ease both;pointer-events:none}
+.opening-quote span{display:block}
 .stage{min-height:100svh;display:grid;place-items:center;padding:28px}
-.card{position:relative;width:min(100%,760px);padding:70px 74px 42px;text-align:center;background:radial-gradient(circle at 50% 8%,rgba(255,255,255,.92),rgba(250,248,242,.98) 58%,#f4ecdd),repeating-linear-gradient(105deg,rgba(197,161,90,.035) 0 1px,transparent 1px 7px);box-shadow:0 30px 90px rgba(10,42,94,.15);border-radius:2px;animation:openCard 850ms cubic-bezier(.2,.8,.2,1) both;transform-origin:50% 0}
+.card{position:relative;width:min(100%,760px);padding:78px 76px 42px;text-align:center;background:radial-gradient(circle at 50% 7%,rgba(255,255,255,.94),rgba(250,248,242,.98) 58%,var(--paper)),repeating-linear-gradient(104deg,rgba(175,138,71,.028) 0 1px,transparent 1px 8px);box-shadow:0 18px 46px rgba(10,42,94,.08);border-radius:2px;animation:cardReveal 900ms ease 900ms both;transform-origin:50% 0}
+.card:after{position:absolute;inset:0;content:"";pointer-events:none;opacity:.35;background:radial-gradient(circle at 18% 22%,rgba(175,138,71,.08),transparent 18%),radial-gradient(circle at 82% 68%,rgba(10,42,94,.045),transparent 22%)}
 .gold-frame,.gold-frame:after{position:absolute;content:"";inset:22px;border:2px solid var(--gold);pointer-events:none}
 .gold-frame:after{inset:10px;border-width:1px}
 .hero,.timeline,.tools,footer{position:relative;z-index:1}
-.crown{font-size:74px;color:var(--gold);line-height:1}
-blockquote{margin:16px 0 18px;font-size:31px;line-height:1.6;color:var(--navy)}
+.crown{font-size:72px;color:var(--gold);line-height:1}
+blockquote{margin:18px 0 20px;font-size:31px;line-height:1.62;color:var(--navy)}
 blockquote span{display:block}
-blockquote cite{display:block;margin-top:7px;color:#9d762d;font:600 15px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;font-style:normal;letter-spacing:0}
-.rule{width:260px;height:1px;margin:18px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.rule.short{width:220px}
-.kicker{margin:0;color:var(--gold);font-size:41px}
-.name-mark{margin:-12px auto 4px;width:min(440px,92%);line-height:0}
+blockquote cite{display:block;margin-top:7px;color:#8f6e3f;font:600 15px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;font-style:normal;letter-spacing:0}
+.rule{width:250px;height:1px;margin:22px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.rule.short{width:210px}
+.kicker{margin:0 0 12px;color:var(--gold);font-size:39px}
+.name-mark{margin:0 auto 12px;width:min(430px,92%);line-height:0}
 .name-mark span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .name-mark img{display:block;width:100%;height:auto;margin:auto;mix-blend-mode:multiply}
-.date{display:inline-block;margin:8px 0 8px;padding:12px 48px;border:1px solid var(--gold);border-radius:999px;background:var(--navy);color:#fff;font:700 46px/1 Georgia,serif}
+.date{display:inline-block;margin:8px 0 8px;padding:12px 46px;border:1px solid var(--gold);border-radius:10px;background:var(--navy);color:#fff;font:700 44px/1 Georgia,serif;box-shadow:0 1px 0 rgba(175,138,71,.45)}
 .hebrew-date,.countdown{margin:4px 0;color:var(--navy);font-size:23px}
-.countdown{color:#9d762d;font-weight:700;font-size:17px}
-.timeline{display:grid;gap:24px;max-width:520px;margin:34px auto}
-.event{direction:ltr;display:grid;grid-template-columns:112px 1fr;gap:26px;align-items:center;text-align:right}
-.event>div:last-child{direction:rtl}
-.medallion{width:108px;height:108px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:var(--gold);border:3px solid var(--gold);font-size:42px;box-shadow:0 14px 34px rgba(10,42,94,.12)}
-time{display:block;color:#a47b31;font:700 41px/1 Georgia,serif}
-h2{margin:0;color:var(--navy);font-size:35px}
-p{font-size:21px;line-height:1.45;margin:6px 0}
-.action{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin-top:12px;padding:10px 18px;border:1px solid var(--gold);border-radius:999px;background:rgba(255,255,255,.54);backdrop-filter:blur(12px);color:var(--navy);font:700 15px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer;box-shadow:0 8px 22px rgba(10,42,94,.08);transition:transform .2s ease,box-shadow .2s ease}
-.action:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,42,94,.13)}
-.tools{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;z-index:10}
+.countdown{color:#8f6e3f;font-weight:700;font-size:16px}
+.timeline{display:grid;gap:16px;max-width:560px;margin:34px auto 28px}
+.event{direction:ltr;display:grid;grid-template-columns:96px 1fr;gap:24px;align-items:center;width:100%;padding:14px 18px;border:1px solid rgba(175,138,71,.5);border-radius:10px;background:rgba(255,253,248,.5);color:inherit;text-align:right;cursor:pointer;box-shadow:none;transition:border-color .18s ease,background-color .18s ease,transform .18s ease}
+.event:hover,.event:focus-visible{border-color:var(--gold);background:rgba(255,253,248,.8);transform:translateY(-1px);outline:none}
+.event-copy{direction:rtl;display:block}
+.medallion{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;background:transparent;color:var(--gold);border:1px solid var(--hairline)}
+.medallion svg{width:54px;height:54px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+time{display:block;color:#8f6e3f;font:700 36px/1 Georgia,serif}
+h2{margin:0;color:var(--navy);font-size:32px}
+p{font-size:20px;line-height:1.45;margin:6px 0}
+.event-nav{display:inline-block;margin-top:10px;padding-top:8px;border-top:1px solid rgba(175,138,71,.58);color:var(--navy);font:700 14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif}
+.action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;padding:10px 18px;border:1px solid var(--hairline);border-radius:10px;background:rgba(255,253,248,.48);color:var(--navy);font:700 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer;box-shadow:none;transition:background-color .18s ease,border-color .18s ease,transform .18s ease}
+.action:hover,.action:focus-visible{border-color:var(--gold);background:rgba(255,253,248,.82);transform:translateY(-1px);outline:none}
+.tools{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;z-index:10}
 .calendar{position:relative;z-index:11}
 .calendar[open]{z-index:30}
 .calendar summary{list-style:none}
 .calendar summary::-webkit-details-marker{display:none}
-.calendar-menu{position:absolute;left:0;right:0;top:58px;display:grid;gap:6px;padding:10px;border:1px solid rgba(197,161,90,.45);border-radius:14px;background:#fffdf8;box-shadow:0 20px 40px rgba(10,42,94,.14);z-index:5}
-.calendar-menu a,.calendar-menu button{display:block;width:100%;border:0;background:transparent;color:var(--navy);font:700 13px system-ui;text-decoration:none;text-align:center;padding:8px;border-radius:10px;cursor:pointer}
-.calendar-menu a:hover,.calendar-menu button:hover{background:#faf3e3}
-.nav-dialog{width:min(92vw,360px);padding:0;border:1px solid var(--gold);border-radius:18px;background:#fffdf8;color:var(--navy);box-shadow:0 28px 80px rgba(10,42,94,.24)}
-.nav-dialog::backdrop{background:rgba(10,42,94,.24);backdrop-filter:blur(3px)}
-.nav-sheet{position:relative;margin:0;padding:24px 22px 22px;border:1px solid rgba(197,161,90,.35);background:radial-gradient(circle at 50% 0,rgba(255,255,255,.95),rgba(250,248,242,.98))}
+.calendar-menu{position:absolute;left:0;right:0;bottom:54px;display:grid;gap:4px;padding:8px;border:1px solid rgba(175,138,71,.45);border-radius:10px;background:#fffdf8;box-shadow:0 12px 26px rgba(10,42,94,.08);z-index:5}
+.calendar-menu a,.calendar-menu button{display:block;width:100%;border:0;background:transparent;color:var(--navy);font:700 13px system-ui;text-decoration:none;text-align:center;padding:8px;border-radius:8px;cursor:pointer}
+.calendar-menu a:hover,.calendar-menu button:hover{background:#f8f0e1}
+.nav-dialog{width:min(92vw,360px);padding:0;border:1px solid var(--gold);border-radius:12px;background:#fffdf8;color:var(--navy);box-shadow:0 18px 50px rgba(10,42,94,.18)}
+.nav-dialog::backdrop{background:rgba(10,42,94,.18);backdrop-filter:blur(2px)}
+.nav-sheet{position:relative;margin:0;padding:24px 22px 22px;border:1px solid rgba(175,138,71,.35);background:radial-gradient(circle at 50% 0,rgba(255,255,255,.95),rgba(250,248,242,.98))}
 .nav-close{position:absolute;left:12px;top:10px;width:32px;height:32px;border:0;background:transparent;color:var(--navy);font:400 28px/1 system-ui;cursor:pointer}
 .nav-title{margin:0;color:var(--gold);font:700 18px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}
 .nav-place{margin:8px 0 18px;font-size:20px;color:var(--navy)}
-.nav-options{display:grid;gap:9px}
-.nav-options a{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px solid rgba(197,161,90,.75);border-radius:999px;color:var(--navy);font:700 15px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;background:rgba(255,255,255,.62);transition:transform .2s ease,box-shadow .2s ease}
-.nav-options a:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(10,42,94,.12)}
+.nav-options{display:grid;gap:8px}
+.nav-options a{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid rgba(175,138,71,.75);border-radius:10px;color:var(--navy);font:700 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;background:rgba(255,255,255,.5);transition:background-color .18s ease,border-color .18s ease}
+.nav-options a:hover{border-color:var(--gold);background:#fffdf8}
 footer{margin-top:30px}
 footer .glad{font-size:30px;color:var(--gold);margin-top:12px}
-#qrCode{margin-top:14px;padding:5px;border:1px solid rgba(197,161,90,.7);background:var(--ivory)}
-@keyframes openCard{from{opacity:0;transform:perspective(900px) rotateX(8deg) translateY(16px)}to{opacity:1;transform:perspective(900px) rotateX(0) translateY(0)}}
+#qrCode{margin-top:14px;padding:5px;border:1px solid rgba(175,138,71,.65);background:var(--ivory)}
+@keyframes quoteReveal{0%,58%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes cardReveal{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
 @media(max-width:620px){
   .stage{padding:0}
-  .card{width:100%;min-height:100svh;padding:48px 20px 34px;overflow:hidden}
+  .card{width:100%;min-height:100svh;padding:52px 20px 34px;overflow:hidden}
   .gold-frame{inset:12px}.gold-frame:after{inset:8px}
   blockquote{font-size:23px}blockquote cite{font-size:13px}
-  .kicker{font-size:34px}.name-mark{width:min(330px,94%);margin-top:-4px}
+  .kicker{font-size:32px;margin-bottom:10px}.name-mark{width:min(330px,94%);margin-bottom:10px}
   .date{font-size:33px;padding-inline:34px}
-  .timeline{max-width:330px}
-  .event{grid-template-columns:76px 1fr;gap:12px}
-  .medallion{width:74px;height:74px;font-size:28px}
-  time{font-size:32px}h2{font-size:27px}p{font-size:18px}
+  .timeline{max-width:348px;gap:12px}
+  .event{grid-template-columns:70px 1fr;gap:12px;padding:12px 14px}
+  .medallion{width:66px;height:66px}.medallion svg{width:42px;height:42px}
+  time{font-size:30px}h2{font-size:26px}p{font-size:18px}
+  .event-nav{font-size:13px}
   .tools{max-width:330px;margin:auto}
   .action{font-size:13px;padding-inline:14px}
 }
-@media(prefers-reduced-motion:reduce){.card{animation:none}.action{transition:none}}
+@media(prefers-reduced-motion:reduce){.opening-quote{display:none}.card{animation:none}.event,.action{transition:none}}

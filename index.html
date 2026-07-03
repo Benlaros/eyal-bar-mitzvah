@@ -23,6 +23,10 @@
   <meta name="twitter:image" content="https://eyal-bar-mitzvah.vercel.app/assets/og-image.svg">
 </head>
 <body>
+  <div class="opening-quote" aria-hidden="true">
+    <span>״צדק צדק תרדוף</span>
+    <span>למען תחיה וירשת את הארץ״</span>
+  </div>
   <main class="stage">
     <article class="card" aria-labelledby="title">
       <div class="gold-frame" aria-hidden="true"></div>
@@ -45,30 +49,50 @@
       </header>
 
       <section class="timeline" aria-label="לוח זמנים">
-        <div class="event">
-          <div class="medallion" aria-hidden="true">✡</div>
-          <div>
+        <button class="event nav-choice" type="button" data-nav-label="בית הכנסת הראל, הר אדר" data-nav-query="בית הכנסת הראל הר אדר" aria-label="נווט לבית הכנסת הראל בהר אדר">
+          <span class="medallion" aria-hidden="true">
+            <svg viewBox="0 0 64 64" focusable="false">
+              <path d="M17 52V28l15-12 15 12v24" />
+              <path d="M23 52V36h18v16" />
+              <path d="M32 16V9" />
+              <path d="M28 9h8" />
+              <path d="M32 26l3.6 6.2h-7.2L32 26z" />
+              <path d="M32 39l-3.6-6.2h7.2L32 39z" />
+            </svg>
+          </span>
+          <span class="event-copy">
             <time datetime="2026-08-10T09:30:00+03:00">9:30</time>
             <h2>עלייה לתורה</h2>
             <p>בית הכנסת<br>בהר אדר</p>
-            <button class="action nav-choice" data-nav-label="בית הכנסת הראל, הר אדר" data-nav-query="בית הכנסת הראל הר אדר">📍 נווט</button>
-          </div>
-        </div>
-        <div class="event">
-          <div class="medallion" aria-hidden="true">🍽</div>
-          <div>
+            <span class="event-nav">נווט לבית הכנסת</span>
+          </span>
+        </button>
+        <button class="event nav-choice" type="button" data-nav-label="עלאש גריל, שד׳ הרכס 13, מודיעין" data-nav-query="עלאש גריל שדרות הרכס 13 מודיעין" aria-label="נווט למסעדת עלאש גריל בשדרות הרכס 13 מודיעין">
+          <span class="medallion" aria-hidden="true">
+            <svg viewBox="0 0 64 64" focusable="false">
+              <path d="M20 10v19" />
+              <path d="M15 10v19" />
+              <path d="M25 10v19" />
+              <path d="M15 29h10" />
+              <path d="M20 29v25" />
+              <path d="M42 10c6 8 6 19 0 27" />
+              <path d="M42 10v44" />
+              <path d="M32 35h20" />
+            </svg>
+          </span>
+          <span class="event-copy">
             <time datetime="2026-08-10T12:30:00+03:00">12:30</time>
             <h2>ארוחת צהריים</h2>
             <p>מסעדת עלאש גריל<br>שד׳ הרכס 13, מודיעין</p>
-            <button class="action nav-choice" data-nav-label="עלאש גריל, שד׳ הרכס 13, מודיעין" data-nav-query="עלאש גריל שדרות הרכס 13 מודיעין">📍 נווט</button>
-          </div>
-        </div>
+            <span class="event-nav">נווט למסעדה</span>
+          </span>
+        </button>
       </section>
 
       <section class="tools" aria-label="פעולות להזמנה">
         <button id="shareButton" class="action">שתף ב-WhatsApp</button>
         <details class="calendar">
-          <summary class="action">📅 הוסף ליומן</summary>
+          <summary class="action">הוסף ליומן</summary>
           <div class="calendar-menu">
             <a id="appleCalendar" href="#" download="eyal-bar-mitzvah.ics">Apple Calendar</a>
             <button id="googleCalendar" type="button">Google Calendar</button>
@@ -96,6 +120,6 @@
       </div>
     </form>
   </dialog>
-  <script src="script.js?v=20260703-google-button"></script>
+  <script src="script.js?v=20260703-print-polish"></script>
 </body>
 </html>
