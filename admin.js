@@ -17,6 +17,8 @@
   const guestControls=document.getElementById("guestControls");
   const groupFilter=document.getElementById("groupFilter");
   const statusFilter=document.getElementById("statusFilter");
+  const rsvpControls=document.getElementById("rsvpControls");
+  const rsvpGroupFilter=document.getElementById("rsvpGroupFilter");
   const invitedTotal=document.getElementById("invitedTotal");
   const guestTotal=document.getElementById("guestTotal");
   const pendingTotal=document.getElementById("pendingTotal");
@@ -66,6 +68,7 @@
     activeTab=tab;
     const isGuests=tab==="guests";
     list.hidden=isGuests;
+    rsvpControls.hidden=isGuests;
     guestList.hidden=!isGuests;
     guestControls.hidden=!isGuests;
     addGuestButton.hidden=!isGuests;
@@ -83,16 +86,37 @@
 
   // ---------- RSVP tab ----------
 
+  function renderRsvpGroupFilter(){
+    const groups=[...new Set(guests.map(g=>g.group_name).filter(Boolean))];
+    const current=rsvpGroupFilter.value;
+    rsvpGroupFilter.textContent="";
+    [["","כל הקבוצות"],...groups.map(name=>[name,name]),["__none__","ללא שיוך"]].forEach(([value,text])=>{
+      const opt=document.createElement("option");
+      opt.value=value;
+      opt.textContent=text;
+      rsvpGroupFilter.appendChild(opt);
+    });
+    if([...rsvpGroupFilter.options].some(o=>o.value===current))rsvpGroupFilter.value=current;
+  }
+
   function renderRows(){
+    renderRsvpGroupFilter();
     list.textContent="";
-    if(!currentRows.length){
+    const filter=rsvpGroupFilter.value;
+    const guestById=Object.fromEntries(guests.map(g=>[g.id,g]));
+    const shown=currentRows.filter(row=>{
+      if(!filter)return true;
+      const group=row.guest_id&&guestById[row.guest_id]?guestById[row.guest_id].group_name:null;
+      return filter==="__none__"?!row.guest_id:group===filter;
+    });
+    if(!shown.length){
       const empty=document.createElement("p");
       empty.className="empty-list";
-      empty.textContent="עדיין אין אישורי הגעה.";
+      empty.textContent=currentRows.length?"אין אישורים בקבוצה הזו.":"עדיין אין אישורי הגעה.";
       list.appendChild(empty);
       return;
     }
-    currentRows.forEach(row=>list.appendChild(renderItem(row)));
+    shown.forEach(row=>list.appendChild(renderItem(row)));
   }
 
   function guestSelect(row){
@@ -493,6 +517,7 @@
   });
   groupFilter.addEventListener("change",renderGuests);
   statusFilter.addEventListener("change",renderGuests);
+  rsvpGroupFilter.addEventListener("change",renderRows);
   signOut.addEventListener("click",()=>{
     sessionStorage.removeItem(authKey);
     rsvpPanel.hidden=true;

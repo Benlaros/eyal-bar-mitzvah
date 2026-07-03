@@ -6,7 +6,7 @@
   <title>אישורי הגעה | אייל</title>
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#FAF8F2">
-  <link rel="stylesheet" href="style.css?v=20260703-filters">
+  <link rel="stylesheet" href="style.css?v=20260703-rsvpfilter">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="admin-body">
@@ -54,6 +54,9 @@
           <button id="addGuest" class="action" type="button" hidden>הוספת מוזמן</button>
           <button id="signOut" class="action" type="button">יציאה</button>
         </div>
+        <div id="rsvpControls" class="admin-actions">
+          <select id="rsvpGroupFilter" class="guest-filter"></select>
+        </div>
         <div id="rsvpList" class="rsvp-list" aria-live="polite"></div>
         <div id="guestControls" class="admin-actions" hidden>
           <select id="groupFilter" class="guest-filter"></select>
@@ -67,7 +70,7 @@
       </section>
     </section>
   </main>
-  <script src="supabase-config.js?v=20260703-filters"></script>
-  <script src="admin.js?v=20260703-filters"></script>
+  <script src="supabase-config.js?v=20260703-rsvpfilter"></script>
+  <script src="admin.js?v=20260703-rsvpfilter"></script>
 </body>
 </html>
