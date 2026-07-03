@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>אישורי הגעה | אייל</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#FAF8F2">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="admin-body">
+  <main class="admin-stage">
+    <section class="admin-card" aria-labelledby="adminTitle">
+      <div class="gold-frame" aria-hidden="true"></div>
+      <p class="kicker">בר המצווה של</p>
+      <h1 id="adminTitle">אייל</h1>
+      <p class="admin-subtitle">אישורי הגעה</p>
+
+      <section id="loginPanel" class="admin-panel">
+        <p>הגישה לעמוד הזה מוגבלת לבן בלבד.</p>
+        <form id="otpRequestForm" class="admin-form">
+          <button id="otpRequestButton" class="action action-primary" type="submit">שלח קוד כניסה למייל</button>
+        </form>
+        <form id="otpVerifyForm" class="admin-form" hidden>
+          <label>
+            <span>קוד שהתקבל במייל</span>
+            <input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required>
+          </label>
+          <button id="otpVerifyButton" class="action action-primary" type="submit">כניסה</button>
+        </form>
+        <p id="authStatus" class="form-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="rsvpPanel" class="admin-panel" hidden>
+        <div class="admin-summary">
+          <div>
+            <span>אישורים</span>
+            <strong id="responseCount">0</strong>
+          </div>
+          <div>
+            <span>אורחים</span>
+            <strong id="guestTotal">0</strong>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button id="refreshRsvps" class="action" type="button">רענן</button>
+          <button id="signOut" class="action" type="button">יציאה</button>
+        </div>
+        <div id="rsvpList" class="rsvp-list" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+  <script src="supabase-config.js?v=20260703-rsvp"></script>
+  <script src="admin.js?v=20260703-rsvp"></script>
+</body>
+</html>

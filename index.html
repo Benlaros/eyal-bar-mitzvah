@@ -94,6 +94,7 @@
       </section>
 
       <section class="tools" aria-label="פעולות להזמנה">
+        <button id="rsvpOpen" class="action action-primary" type="button">אישור הגעה</button>
         <button id="shareButton" class="action">שתף ב-WhatsApp</button>
         <details class="calendar">
           <summary class="action">הוסף ליומן</summary>
@@ -113,6 +114,27 @@
       </footer>
     </article>
   </main>
+  <dialog id="rsvpDialog" class="nav-dialog rsvp-dialog" aria-labelledby="rsvpDialogTitle">
+    <form id="rsvpForm" class="nav-sheet rsvp-sheet">
+      <button class="nav-close" type="button" data-close-rsvp aria-label="סגור">×</button>
+      <p id="rsvpDialogTitle" class="nav-title">אישור הגעה</p>
+      <p class="nav-place">נשמח לדעת שתהיו איתנו</p>
+      <label>
+        <span>שם מלא</span>
+        <input id="guestName" name="guest_name" type="text" autocomplete="name" maxlength="120" required>
+      </label>
+      <label>
+        <span>כמה מגיעים?</span>
+        <input id="guestCount" name="guest_count" type="number" inputmode="numeric" min="1" max="20" value="1" required>
+      </label>
+      <label>
+        <span>הערה קצרה</span>
+        <textarea id="guestNote" name="note" maxlength="500" rows="3"></textarea>
+      </label>
+      <button id="rsvpSubmit" class="action action-primary" type="submit">שליחת אישור</button>
+      <p id="rsvpStatus" class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
   <dialog id="navDialog" class="nav-dialog" aria-labelledby="navDialogTitle">
     <form method="dialog" class="nav-sheet">
       <button class="nav-close" value="close" aria-label="סגור">×</button>
@@ -125,6 +147,7 @@
       </div>
     </form>
   </dialog>
-  <script src="script.js?v=20260703-countdown-footer"></script>
+  <script src="supabase-config.js?v=20260703-rsvp"></script>
+  <script src="script.js?v=20260703-rsvp"></script>
 </body>
 </html>

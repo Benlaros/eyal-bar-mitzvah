@@ -95,6 +95,69 @@
     });
   }
 
+  async function submitRsvp(form,status,submit){
+    const config=window.EYAL_SUPABASE;
+    if(!config){
+      status.textContent="אישור ההגעה לא זמין כרגע.";
+      status.classList.add("is-error");
+      return;
+    }
+    const name=form.guest_name.value.trim();
+    const count=Number(form.guest_count.value);
+    const note=form.note.value.trim();
+    status.classList.remove("is-error");
+    if(!name||name.length>120||!Number.isInteger(count)||count<1||count>20||note.length>500){
+      status.textContent="כדאי לבדוק את השם וכמות האורחים.";
+      status.classList.add("is-error");
+      return;
+    }
+    submit.disabled=true;
+    status.textContent="שולחים...";
+    try{
+      const res=await fetch(`${config.url}/rest/v1/eyal_rsvps`,{
+        method:"POST",
+        headers:{
+          apikey:config.anonKey,
+          Authorization:`Bearer ${config.anonKey}`,
+          "Content-Type":"application/json",
+          Prefer:"return=minimal"
+        },
+        body:JSON.stringify({guest_name:name,guest_count:count,note:note||null})
+      });
+      if(!res.ok)throw new Error("insert failed");
+      form.reset();
+      form.guest_count.value="1";
+      status.textContent="תודה, אישור ההגעה נרשם.";
+    }catch(error){
+      status.textContent="לא הצלחנו לשמור כרגע. נסו שוב עוד רגע.";
+      status.classList.add("is-error");
+    }finally{
+      submit.disabled=false;
+    }
+  }
+
+  function setRsvp(){
+    const open=document.getElementById("rsvpOpen");
+    const dialog=document.getElementById("rsvpDialog");
+    const form=document.getElementById("rsvpForm");
+    const close=document.querySelector("[data-close-rsvp]");
+    const status=document.getElementById("rsvpStatus");
+    const submit=document.getElementById("rsvpSubmit");
+    if(!open||!dialog||!form||!close||!status||!submit)return;
+    open.addEventListener("click",()=>{
+      status.textContent="";
+      status.classList.remove("is-error");
+      if(typeof dialog.showModal==="function")dialog.showModal();
+      else dialog.setAttribute("open","");
+      form.guest_name.focus();
+    });
+    close.addEventListener("click",()=>dialog.close());
+    form.addEventListener("submit",event=>{
+      event.preventDefault();
+      submitRsvp(form,status,submit);
+    });
+  }
+
   function openWaze(appUrl,webUrl){
     const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if(!isMobile){location.href=webUrl;return}
@@ -141,6 +204,7 @@
   setCountdown();
   setCalendars();
   setShare();
+  setRsvp();
   setNavigation();
   setQr();
 })();
