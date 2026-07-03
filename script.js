@@ -32,8 +32,13 @@
 
     requestAnimationFrame(placeQuote);
     window.addEventListener("resize",placeQuote,{passive:true});
+    const finish=()=>{
+      document.body.classList.remove("intro-active");
+      overlay.hidden=true;
+    };
+    moving.addEventListener("animationend",finish,{once:true});
     setTimeout(()=>document.body.classList.remove("intro-active"),2880);
-    setTimeout(()=>{overlay.hidden=true},3450);
+    setTimeout(finish,3450);
   }
 
   function setCountdown(){
