@@ -115,6 +115,10 @@ footer .glad{font-size:30px;color:var(--gold);margin-top:12px}
 .row-action:hover{border-color:var(--gold);color:var(--navy)}
 .row-action-danger{color:#9b2c2c}
 .rsvp-edit-form{margin-top:0}
+.admin-tabs .action.is-active{border-color:var(--gold);color:var(--navy);background:rgba(175,138,71,.14)}
+.guest-filter,.guest-link{width:100%;border:1px solid rgba(175,138,71,.52);border-radius:8px;background:rgba(255,253,248,.72);color:var(--navy);font:600 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;padding:9px 10px}
+.guest-status{margin:8px 0 0;font:700 13px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;color:#9b2c2c}
+.guest-status-ok{color:#2f7d4f}
 
 @media(max-width:620px){
   .admin-stage{padding:0}
