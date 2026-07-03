@@ -8,6 +8,34 @@
   const locationText="בית הכנסת, הר אדר; מסעדת עלאש גריל, שד׳ הרכס 13, מודיעין";
   const enc=encodeURIComponent;
 
+  function setOpeningQuoteMotion(){
+    const overlay=document.querySelector(".opening-quote");
+    const moving=document.querySelector(".opening-quote-inner");
+    const target=document.querySelector(".hero blockquote");
+    if(!overlay||!moving||!target)return;
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches){
+      document.body.classList.remove("intro-active");
+      overlay.hidden=true;
+      return;
+    }
+
+    const placeQuote=()=>{
+      const from=moving.getBoundingClientRect();
+      const to=target.getBoundingClientRect();
+      const x=to.left+to.width/2-(from.left+from.width/2);
+      const y=to.top+to.height/2-(from.top+from.height/2);
+      const scale=Math.max(.46,Math.min(.72,to.width/from.width));
+      moving.style.setProperty("--quote-x",`${x}px`);
+      moving.style.setProperty("--quote-y",`${y}px`);
+      moving.style.setProperty("--quote-scale",scale.toFixed(3));
+    };
+
+    requestAnimationFrame(placeQuote);
+    window.addEventListener("resize",placeQuote,{passive:true});
+    setTimeout(()=>document.body.classList.remove("intro-active"),2880);
+    setTimeout(()=>{overlay.hidden=true},3450);
+  }
+
   function setCountdown(){
     const el=document.getElementById("countdown");
     if(!el)return;
@@ -105,6 +133,7 @@
     if(img)img.src=`https://api.qrserver.com/v1/create-qr-code/?size=164x164&margin=8&color=0A2A5E&bgcolor=FAF8F2&data=${enc(site)}`;
   }
 
+  setOpeningQuoteMotion();
   setCountdown();
   setCalendars();
   setShare();
