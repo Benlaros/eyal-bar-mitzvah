@@ -19,15 +19,12 @@
 
       <section id="loginPanel" class="admin-panel">
         <p>הגישה לעמוד הזה מוגבלת לבן בלבד.</p>
-        <form id="otpRequestForm" class="admin-form">
-          <button id="otpRequestButton" class="action action-primary" type="submit">שלח קוד כניסה למייל</button>
-        </form>
-        <form id="otpVerifyForm" class="admin-form" hidden>
+        <form id="passwordForm" class="admin-form">
           <label>
-            <span>קוד שהתקבל במייל</span>
-            <input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required>
+            <span>סיסמה</span>
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
           </label>
-          <button id="otpVerifyButton" class="action action-primary" type="submit">כניסה</button>
+          <button id="passwordButton" class="action action-primary" type="submit">כניסה</button>
         </form>
         <p id="authStatus" class="form-status" role="status" aria-live="polite"></p>
       </section>
@@ -51,7 +48,7 @@
       </section>
     </section>
   </main>
-  <script src="supabase-config.js?v=20260703-rsvp"></script>
-  <script src="admin.js?v=20260703-rsvp"></script>
+  <script src="supabase-config.js?v=20260703-pw"></script>
+  <script src="admin.js?v=20260703-pw"></script>
 </body>
 </html>

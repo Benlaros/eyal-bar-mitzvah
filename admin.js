@@ -8,10 +8,9 @@
 
   const loginPanel=document.getElementById("loginPanel");
   const rsvpPanel=document.getElementById("rsvpPanel");
-  const requestForm=document.getElementById("otpRequestForm");
-  const verifyForm=document.getElementById("otpVerifyForm");
+  const passwordForm=document.getElementById("passwordForm");
   const authStatus=document.getElementById("authStatus");
-  const otpCode=document.getElementById("otpCode");
+  const adminPassword=document.getElementById("adminPassword");
   const list=document.getElementById("rsvpList");
   const responseCount=document.getElementById("responseCount");
   const guestTotal=document.getElementById("guestTotal");
@@ -92,42 +91,26 @@
       sessionStorage.removeItem(authKey);
       rsvpPanel.hidden=true;
       loginPanel.hidden=false;
-      setStatus("פג תוקף הכניסה. שלח קוד חדש למייל.",true);
+      setStatus("פג תוקף הכניסה. הזן סיסמה שוב.",true);
     }
   }
 
-  requestForm.addEventListener("submit",async event=>{
+  passwordForm.addEventListener("submit",async event=>{
     event.preventDefault();
-    setStatus("שולח קוד למייל...");
+    setStatus("מתחבר...");
     try{
-      await api("/auth/v1/otp",{
+      const res=await api("/auth/v1/token?grant_type=password",{
         method:"POST",
         headers,
-        body:JSON.stringify({email,should_create_user:true})
-      });
-      verifyForm.hidden=false;
-      otpCode.focus();
-      setStatus("שלחנו קוד כניסה ל-benlaros@gmail.com");
-    }catch(error){
-      setStatus(error.message,true);
-    }
-  });
-
-  verifyForm.addEventListener("submit",async event=>{
-    event.preventDefault();
-    setStatus("בודק את הקוד...");
-    try{
-      const res=await api("/auth/v1/verify",{
-        method:"POST",
-        headers,
-        body:JSON.stringify({type:"email",email,token:otpCode.value.trim()})
+        body:JSON.stringify({email,password:adminPassword.value})
       });
       const data=await res.json();
       sessionStorage.setItem(authKey,data.access_token);
+      adminPassword.value="";
       setStatus("");
       showDashboard();
     }catch(error){
-      setStatus("הקוד לא אושר. כדאי לבדוק שהועתק בדיוק.",true);
+      setStatus("הסיסמה לא נכונה.",true);
     }
   });
 
