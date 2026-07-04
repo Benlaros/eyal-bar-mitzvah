@@ -47,7 +47,9 @@
     const now=new Date();
     const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     const days=Math.ceil((new Date(2026,7,10)-today)/86400000);
-    if(days>=0){
+    if(days===0){
+      el.innerHTML=`היום זה היום!<strong>נתראה עוד מעט</strong>`;
+    }else if(days>0){
       el.innerHTML=`ממשיכים לספור את הימים...<strong>אגב, זה בעוד ${days} יום</strong>`;
     }else{
       el.textContent="תודה שבאתם";
