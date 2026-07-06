@@ -126,6 +126,8 @@ footer .glad{font-size:30px;color:var(--gold);margin-top:12px}
 .guest-status-ok{color:#2f7d4f}
 .venue-summary{margin:0 0 14px;text-align:center;color:#8f6e3f;font:700 14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
 .venue-line{margin:8px 0 0;color:#8f6e3f;font:600 13px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif}
+.linker{flex-wrap:wrap;gap:6px}
+.linker .guest-link{flex:1 1 46%;min-width:120px}
 
 @media(max-width:620px){
   .admin-stage{padding:0}

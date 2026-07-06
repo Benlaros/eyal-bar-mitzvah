@@ -15,6 +15,7 @@
   };
   const CATEGORIES=Object.keys(CATEGORY_GROUPS);
   function groupToCategory(groupName){
+    if(CATEGORIES.includes(groupName))return groupName; // guest categorized at top level only
     return CATEGORIES.find(c=>CATEGORY_GROUPS[c].includes(groupName))||null;
   }
 
@@ -145,34 +146,70 @@
     shown.forEach(row=>list.appendChild(renderItem(row)));
   }
 
-  function guestSelect(row){
-    const select=document.createElement("select");
-    select.className="guest-link";
-    const none=document.createElement("option");
-    none.value="";
-    none.textContent="— שיוך למוזמן —";
-    select.appendChild(none);
-    guests.forEach(g=>{
-      const opt=document.createElement("option");
-      opt.value=g.id;
-      opt.textContent=g.group_name?`${g.guest_name} (${g.group_name})`:g.guest_name;
-      if(row.guest_id===g.id)opt.selected=true;
-      select.appendChild(opt);
-    });
-    select.addEventListener("change",async()=>{
-      try{
+  // category -> group -> existing-guest cascade; if no existing guest chosen, adds a new one
+  function guestLinker(row){
+    const wrap=document.createElement("div");
+    wrap.className="rsvp-item-actions linker";
+    const catSel=document.createElement("select");catSel.className="guest-link";
+    const groupSel=document.createElement("select");groupSel.className="guest-link";
+    const guestSel=document.createElement("select");guestSel.className="guest-link";
+    const linked=row.guest_id?guests.find(g=>g.id===row.guest_id):null;
+    const curCat=linked?groupToCategory(linked.group_name):(row.rsvp_group||"");
+    const groupsOf=cat=>cat?CATEGORY_GROUPS[cat].map(x=>[x,x]):[];
+    const guestsOf=(cat,group)=>guests.filter(g=>
+      (!cat||groupToCategory(g.group_name)===cat)&&(!group||g.group_name===group)
+    ).map(g=>[g.id,g.guest_name]);
+    const fillGroup=()=>fillSelect(groupSel,[["","קבוצה..."],...groupsOf(catSel.value)]);
+    const fillGuest=()=>fillSelect(guestSel,[["","— מוזמן קיים —"],...guestsOf(catSel.value,groupSel.value)]);
+    fillSelect(catSel,[["","קטגוריה..."],...CATEGORIES.map(c=>[c,c])]);
+    catSel.value=curCat||"";
+    fillGroup();
+    groupSel.value=linked?(linked.group_name||""):"";
+    fillGuest();
+    guestSel.value=linked?linked.id:"";
+    catSel.addEventListener("change",()=>{groupSel.value="";fillGroup();fillGuest();});
+    groupSel.addEventListener("change",fillGuest);
+    const act=document.createElement("button");
+    act.type="button";
+    act.className="row-action";
+    act.textContent="שייך / הוסף";
+    act.addEventListener("click",()=>linkOrAdd(row,catSel.value,groupSel.value,guestSel.value));
+    wrap.append(catSel,groupSel,guestSel,act);
+    return wrap;
+  }
+
+  async function linkOrAdd(row,cat,group,guestId){
+    try{
+      if(guestId){
         await api(`/rest/v1/eyal_rsvps?id=eq.${row.id}`,{
           method:"PATCH",
           headers:authHeaders({Prefer:"return=minimal"}),
-          body:JSON.stringify({guest_id:select.value||null})
+          body:JSON.stringify({guest_id:guestId})
         });
-        row.guest_id=select.value||null;
-        renderSummary();
-      }catch(error){
-        alert("השיוך נכשל. נסו שוב.");
+      }else{
+        if(!cat){alert("בחרו קטגוריה.");return;}
+        if(!confirm(`להוסיף את ${row.guest_name} לרשימת המוזמנים?`))return;
+        const res=await api("/rest/v1/eyal_guests",{
+          method:"POST",
+          headers:authHeaders({Prefer:"return=representation"}),
+          body:JSON.stringify({
+            guest_name:row.guest_name,
+            group_name:group||cat, // store category when no specific group chosen
+            invited_count:row.guest_count,
+            note:"נוסף מאישור הגעה"
+          })
+        });
+        const created=(await res.json())[0];
+        await api(`/rest/v1/eyal_rsvps?id=eq.${row.id}`,{
+          method:"PATCH",
+          headers:authHeaders({Prefer:"return=minimal"}),
+          body:JSON.stringify({guest_id:created.id})
+        });
       }
-    });
-    return select;
+      loadAll();
+    }catch(error){
+      alert("הפעולה נכשלה. נסו שוב.");
+    }
   }
 
   function venueText(row){
@@ -204,20 +241,9 @@
       note.textContent=row.note;
       item.appendChild(note);
     }
-    const linkRow=document.createElement("div");
-    linkRow.className="rsvp-item-actions";
-    linkRow.appendChild(guestSelect(row));
-    item.appendChild(linkRow);
+    item.appendChild(guestLinker(row));
     const rowActions=document.createElement("div");
     rowActions.className="rsvp-item-actions";
-    if(!row.guest_id){
-      const addToList=document.createElement("button");
-      addToList.type="button";
-      addToList.className="row-action";
-      addToList.textContent="הוסף לרשימה";
-      addToList.addEventListener("click",()=>addRsvpToGuests(row));
-      rowActions.appendChild(addToList);
-    }
     const editButton=document.createElement("button");
     editButton.type="button";
     editButton.className="row-action";
@@ -319,33 +345,6 @@
     });
     item.appendChild(form);
     return item;
-  }
-
-  // create a guest from an unlinked RSVP, then link it
-  async function addRsvpToGuests(row){
-    if(!confirm(`להוסיף את ${row.guest_name} לרשימת המוזמנים?`))return;
-    try{
-      const groupName=row.rsvp_group&&CATEGORY_GROUPS[row.rsvp_group]?row.rsvp_group:null;
-      const res=await api("/rest/v1/eyal_guests",{
-        method:"POST",
-        headers:authHeaders({Prefer:"return=representation"}),
-        body:JSON.stringify({
-          guest_name:row.guest_name,
-          group_name:groupName,
-          invited_count:row.guest_count,
-          note:"נוסף מאישור הגעה"
-        })
-      });
-      const created=(await res.json())[0];
-      await api(`/rest/v1/eyal_rsvps?id=eq.${row.id}`,{
-        method:"PATCH",
-        headers:authHeaders({Prefer:"return=minimal"}),
-        body:JSON.stringify({guest_id:created.id})
-      });
-      loadAll();
-    }catch(error){
-      alert("ההוספה נכשלה. נסו שוב.");
-    }
   }
 
   function exportCsv(){
