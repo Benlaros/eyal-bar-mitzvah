@@ -284,6 +284,7 @@
       label.append(labelText);
       const input=document.createElement("input");
       input.type=type;
+      if(type==="number")input.inputMode="numeric";
       Object.assign(input,attrs);
       input.value=value;
       label.appendChild(input);
@@ -541,6 +542,7 @@
       label.append(labelText);
       const input=document.createElement("input");
       input.type=type;
+      if(type==="number")input.inputMode="numeric";
       Object.assign(input,attrs);
       input.value=value;
       label.appendChild(input);
