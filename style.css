@@ -63,7 +63,7 @@ p{font-size:20px;line-height:1.45;margin:6px 0}
 .rsvp-dialog{width:min(92vw,410px)}
 .rsvp-sheet{display:grid;gap:10px}
 .rsvp-sheet label,.admin-form label{display:grid;gap:6px;text-align:right;color:var(--navy);font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}
-.rsvp-sheet input,.rsvp-sheet textarea,.rsvp-sheet select,.admin-form input{width:100%;border:1px solid rgba(175,138,71,.58);border-radius:10px;background:rgba(255,255,255,.72);color:var(--navy);font:600 16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;padding:11px 12px;outline:none}
+.rsvp-sheet input,.rsvp-sheet textarea,.rsvp-sheet select,.admin-form input,.admin-form select{width:100%;border:1px solid rgba(175,138,71,.58);border-radius:10px;background:rgba(255,255,255,.72);color:var(--navy);font:600 16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;padding:11px 12px;outline:none}
 .rsvp-sheet textarea{resize:vertical}
 .rsvp-venues{margin:0;padding:12px 14px;border:1px solid rgba(175,138,71,.5);border-radius:10px;background:rgba(255,255,255,.5);display:grid;gap:10px}
 .rsvp-venues legend{padding:0 6px;color:var(--navy);font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif}

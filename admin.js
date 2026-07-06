@@ -27,11 +27,9 @@
   const guestList=document.getElementById("guestList");
   const guestControls=document.getElementById("guestControls");
   const categoryFilter=document.getElementById("categoryFilter");
-  const groupFilter=document.getElementById("groupFilter");
   const statusFilter=document.getElementById("statusFilter");
   const rsvpControls=document.getElementById("rsvpControls");
   const rsvpCategoryFilter=document.getElementById("rsvpCategoryFilter");
-  const rsvpGroupFilter=document.getElementById("rsvpGroupFilter");
   const invitedTotal=document.getElementById("invitedTotal");
   const guestTotal=document.getElementById("guestTotal");
   const pendingTotal=document.getElementById("pendingTotal");
@@ -104,13 +102,6 @@
     if([...select.options].some(o=>o.value===current))select.value=current;
   }
 
-  // secondary group options limited to the selected category (or all if none)
-  function groupPairsFor(categoryValue){
-    const groups=[...new Set(guests.map(g=>g.group_name).filter(Boolean))];
-    const scoped=categoryValue?groups.filter(g=>groupToCategory(g)===categoryValue):groups;
-    return scoped.map(name=>[name,name]);
-  }
-
   function categoryPairs(){
     return [["","כל הקטגוריות"],...CATEGORIES.map(c=>[c,c])];
   }
@@ -136,17 +127,13 @@
   }
 
   function renderRows(){
-    fillSelect(rsvpCategoryFilter,categoryPairs());
-    fillSelect(rsvpGroupFilter,[["","כל הקבוצות"],...groupPairsFor(rsvpCategoryFilter.value),["__none__","ללא שיוך"]]);
+    fillSelect(rsvpCategoryFilter,[...categoryPairs(),["__none__","ללא שיוך"]]);
     list.textContent="";
     const cat=rsvpCategoryFilter.value;
-    const group=rsvpGroupFilter.value;
-    const guestById=Object.fromEntries(guests.map(g=>[g.id,g]));
     const shown=currentRows.filter(row=>{
-      if(cat&&rsvpCategory(row)!==cat)return false;
-      if(!group)return true;
-      const g=row.guest_id&&guestById[row.guest_id]?guestById[row.guest_id].group_name:null;
-      return group==="__none__"?!row.guest_id:g===group;
+      if(!cat)return true;
+      if(cat==="__none__")return !row.guest_id;
+      return rsvpCategory(row)===cat;
     });
     if(!shown.length){
       const empty=document.createElement("p");
@@ -395,10 +382,8 @@
 
   function renderGuests(){
     fillSelect(categoryFilter,categoryPairs());
-    fillSelect(groupFilter,[["","כל הקבוצות"],...groupPairsFor(categoryFilter.value)]);
     guestList.textContent="";
     const cat=categoryFilter.value;
-    const filter=groupFilter.value;
     const linkedCounts={};
     currentRows.forEach(r=>{
       if(r.guest_id)linkedCounts[r.guest_id]=(linkedCounts[r.guest_id]||0)+Number(r.guest_count||0);
@@ -406,7 +391,6 @@
     const status=statusFilter.value;
     const shown=guests.filter(g=>
       (!cat||groupToCategory(g.group_name)===cat)&&
-      (!filter||g.group_name===filter)&&
       (!status||(status==="confirmed"?linkedCounts[g.id]!=null:linkedCounts[g.id]==null))
     );
     if(!shown.length){
@@ -533,7 +517,6 @@
     const fields=[
       ["שם","text",g.guest_name||"",{maxLength:120,required:true}],
       ["טלפון","tel",g.phone||"",{maxLength:20}],
-      ["קבוצה","text",g.group_name||"",{maxLength:80}],
       ["מוזמנים","number",g.invited_count??"",{min:"0",max:"30"}],
       ["הערה","text",g.note||"",{maxLength:500}]
     ];
@@ -549,6 +532,28 @@
       form.appendChild(label);
       return input;
     });
+    // category -> group cascade (replaces free-text group field)
+    const catLabel=document.createElement("label");
+    catLabel.append("קטגוריה");
+    const catSelect=document.createElement("select");
+    catLabel.appendChild(catSelect);
+    const groupLabel=document.createElement("label");
+    groupLabel.append("קבוצה");
+    const groupSelect=document.createElement("select");
+    groupLabel.appendChild(groupSelect);
+    const currentCat=groupToCategory(g.group_name)||"";
+    fillSelect(catSelect,[["","בחרו..."],...CATEGORIES.map(c=>[c,c])]);
+    catSelect.value=currentCat;
+    function fillGroups(){
+      const opts=catSelect.value?CATEGORY_GROUPS[catSelect.value].map(x=>[x,x]):[];
+      fillSelect(groupSelect,[["","בחרו..."],...opts]);
+    }
+    fillGroups();
+    groupSelect.value=g.group_name||"";
+    catSelect.addEventListener("change",()=>{groupSelect.value="";fillGroups();});
+    // insert cascade right after the phone field (children: שם, טלפון, מוזמנים, הערה)
+    form.insertBefore(groupLabel,form.children[2]);
+    form.insertBefore(catLabel,groupLabel);
     const buttons=document.createElement("div");
     buttons.className="rsvp-item-actions";
     const save=document.createElement("button");
@@ -570,9 +575,9 @@
       const payload={
         guest_name:inputs[0].value.trim(),
         phone:inputs[1].value.trim()||null,
-        group_name:inputs[2].value.trim()||null,
-        invited_count:inputs[3].value===""?null:Number(inputs[3].value),
-        note:inputs[4].value.trim()||null
+        group_name:groupSelect.value||null,
+        invited_count:inputs[2].value===""?null:Number(inputs[2].value),
+        note:inputs[3].value.trim()||null
       };
       try{
         if(isNew){
@@ -646,10 +651,8 @@
   addGuestButton.addEventListener("click",()=>{
     guestList.prepend(renderGuestEditor({},null));
   });
-  rsvpCategoryFilter.addEventListener("change",()=>{rsvpGroupFilter.value="";renderRows();});
-  rsvpGroupFilter.addEventListener("change",renderRows);
-  categoryFilter.addEventListener("change",()=>{groupFilter.value="";renderGuests();});
-  groupFilter.addEventListener("change",renderGuests);
+  rsvpCategoryFilter.addEventListener("change",renderRows);
+  categoryFilter.addEventListener("change",renderGuests);
   statusFilter.addEventListener("change",renderGuests);
   signOut.addEventListener("click",()=>{
     sessionStorage.removeItem(authKey);
