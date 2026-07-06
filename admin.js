@@ -7,6 +7,17 @@
   const headers={"apikey":anonKey,"Content-Type":"application/json"};
   const siteUrl="https://eyal-bar-mitzvah.vercel.app";
 
+  // main category -> source group names (from the invite spreadsheet)
+  const CATEGORY_GROUPS={
+    "משפחה":["משפחה","משפחה מורחבת"],
+    "חברים של המשפחה":["חברים בן","חברים הילה","חברים הילה ובן","עבודה הילה"],
+    "חברים של אייל":["חברים אייל"]
+  };
+  const CATEGORIES=Object.keys(CATEGORY_GROUPS);
+  function groupToCategory(groupName){
+    return CATEGORIES.find(c=>CATEGORY_GROUPS[c].includes(groupName))||null;
+  }
+
   const loginPanel=document.getElementById("loginPanel");
   const rsvpPanel=document.getElementById("rsvpPanel");
   const passwordForm=document.getElementById("passwordForm");
@@ -15,13 +26,16 @@
   const list=document.getElementById("rsvpList");
   const guestList=document.getElementById("guestList");
   const guestControls=document.getElementById("guestControls");
+  const categoryFilter=document.getElementById("categoryFilter");
   const groupFilter=document.getElementById("groupFilter");
   const statusFilter=document.getElementById("statusFilter");
   const rsvpControls=document.getElementById("rsvpControls");
+  const rsvpCategoryFilter=document.getElementById("rsvpCategoryFilter");
   const rsvpGroupFilter=document.getElementById("rsvpGroupFilter");
   const invitedTotal=document.getElementById("invitedTotal");
   const guestTotal=document.getElementById("guestTotal");
   const pendingTotal=document.getElementById("pendingTotal");
+  const venueSummary=document.getElementById("venueSummary");
   const tabRsvps=document.getElementById("tabRsvps");
   const tabGuests=document.getElementById("tabGuests");
   const refresh=document.getElementById("refreshRsvps");
@@ -77,42 +91,67 @@
     tabGuests.classList.toggle("is-active",isGuests);
   }
 
+  // fill a <select> with [value,text] pairs, preserving current value if still valid
+  function fillSelect(select,pairs){
+    const current=select.value;
+    select.textContent="";
+    pairs.forEach(([value,text])=>{
+      const opt=document.createElement("option");
+      opt.value=value;
+      opt.textContent=text;
+      select.appendChild(opt);
+    });
+    if([...select.options].some(o=>o.value===current))select.value=current;
+  }
+
+  // secondary group options limited to the selected category (or all if none)
+  function groupPairsFor(categoryValue){
+    const groups=[...new Set(guests.map(g=>g.group_name).filter(Boolean))];
+    const scoped=categoryValue?groups.filter(g=>groupToCategory(g)===categoryValue):groups;
+    return scoped.map(name=>[name,name]);
+  }
+
+  function categoryPairs(){
+    return [["","כל הקטגוריות"],...CATEGORIES.map(c=>[c,c])];
+  }
+
   function renderSummary(){
     invitedTotal.textContent=String(guests.reduce((s,g)=>s+Number(g.invited_count||0),0));
     guestTotal.textContent=String(currentRows.reduce((s,r)=>s+Number(r.guest_count||0),0));
     const linked=new Set(currentRows.map(r=>r.guest_id).filter(Boolean));
     pendingTotal.textContent=String(guests.filter(g=>!linked.has(g.id)).length);
+    const syn=currentRows.filter(r=>r.at_synagogue!==false).reduce((s,r)=>s+Number(r.guest_count||0),0);
+    const rest=currentRows.filter(r=>r.at_restaurant!==false).reduce((s,r)=>s+Number(r.guest_count||0),0);
+    venueSummary.textContent=`בית כנסת ${syn} · מסעדה ${rest}`;
   }
 
   // ---------- RSVP tab ----------
 
-  function renderRsvpGroupFilter(){
-    const groups=[...new Set(guests.map(g=>g.group_name).filter(Boolean))];
-    const current=rsvpGroupFilter.value;
-    rsvpGroupFilter.textContent="";
-    [["","כל הקבוצות"],...groups.map(name=>[name,name]),["__none__","ללא שיוך"]].forEach(([value,text])=>{
-      const opt=document.createElement("option");
-      opt.value=value;
-      opt.textContent=text;
-      rsvpGroupFilter.appendChild(opt);
-    });
-    if([...rsvpGroupFilter.options].some(o=>o.value===current))rsvpGroupFilter.value=current;
+  function rsvpCategory(row){
+    if(row.guest_id){
+      const g=guests.find(x=>x.id===row.guest_id);
+      return g?groupToCategory(g.group_name):null;
+    }
+    return row.rsvp_group||null; // self-selected category on the public form
   }
 
   function renderRows(){
-    renderRsvpGroupFilter();
+    fillSelect(rsvpCategoryFilter,categoryPairs());
+    fillSelect(rsvpGroupFilter,[["","כל הקבוצות"],...groupPairsFor(rsvpCategoryFilter.value),["__none__","ללא שיוך"]]);
     list.textContent="";
-    const filter=rsvpGroupFilter.value;
+    const cat=rsvpCategoryFilter.value;
+    const group=rsvpGroupFilter.value;
     const guestById=Object.fromEntries(guests.map(g=>[g.id,g]));
     const shown=currentRows.filter(row=>{
-      if(!filter)return true;
-      const group=row.guest_id&&guestById[row.guest_id]?guestById[row.guest_id].group_name:null;
-      return filter==="__none__"?!row.guest_id:group===filter;
+      if(cat&&rsvpCategory(row)!==cat)return false;
+      if(!group)return true;
+      const g=row.guest_id&&guestById[row.guest_id]?guestById[row.guest_id].group_name:null;
+      return group==="__none__"?!row.guest_id:g===group;
     });
     if(!shown.length){
       const empty=document.createElement("p");
       empty.className="empty-list";
-      empty.textContent=currentRows.length?"אין אישורים בקבוצה הזו.":"עדיין אין אישורי הגעה.";
+      empty.textContent=currentRows.length?"אין אישורים בסינון הזה.":"עדיין אין אישורי הגעה.";
       list.appendChild(empty);
       return;
     }
@@ -149,6 +188,13 @@
     return select;
   }
 
+  function venueText(row){
+    const parts=[];
+    if(row.at_synagogue!==false)parts.push("בית כנסת");
+    if(row.at_restaurant!==false)parts.push("מסעדה");
+    return parts.join(" + ")||"ללא מתחם";
+  }
+
   function renderItem(row){
     const item=document.createElement("article");
     item.className="rsvp-item";
@@ -162,6 +208,10 @@
     date.textContent=new Intl.DateTimeFormat("he-IL",{dateStyle:"short",timeStyle:"short"}).format(new Date(row.created_at));
     top.append(name,count);
     item.append(top,date);
+    const venue=document.createElement("p");
+    venue.className="venue-line";
+    venue.textContent=`📍 ${venueText(row)}`;
+    item.appendChild(venue);
     if(row.note){
       const note=document.createElement("p");
       note.textContent=row.note;
@@ -173,6 +223,14 @@
     item.appendChild(linkRow);
     const rowActions=document.createElement("div");
     rowActions.className="rsvp-item-actions";
+    if(!row.guest_id){
+      const addToList=document.createElement("button");
+      addToList.type="button";
+      addToList.className="row-action";
+      addToList.textContent="הוסף לרשימה";
+      addToList.addEventListener("click",()=>addRsvpToGuests(row));
+      rowActions.appendChild(addToList);
+    }
     const editButton=document.createElement("button");
     editButton.type="button";
     editButton.className="row-action";
@@ -199,6 +257,18 @@
     return item;
   }
 
+  function checkboxRow(labelText,checked){
+    const label=document.createElement("label");
+    label.className="checkbox";
+    const input=document.createElement("input");
+    input.type="checkbox";
+    input.checked=checked;
+    const span=document.createElement("span");
+    span.textContent=labelText;
+    label.append(input,span);
+    return {label,input};
+  }
+
   function renderEditor(row){
     const item=document.createElement("article");
     item.className="rsvp-item";
@@ -220,6 +290,9 @@
       form.appendChild(label);
       return input;
     });
+    const syn=checkboxRow("בית כנסת",row.at_synagogue!==false);
+    const rest=checkboxRow("מסעדה",row.at_restaurant!==false);
+    form.append(syn.label,rest.label);
     const buttons=document.createElement("div");
     buttons.className="rsvp-item-actions";
     const save=document.createElement("button");
@@ -235,6 +308,10 @@
     form.appendChild(buttons);
     form.addEventListener("submit",async event=>{
       event.preventDefault();
+      if(!syn.input.checked&&!rest.input.checked){
+        alert("בחרו לפחות מתחם אחד.");
+        return;
+      }
       try{
         await api(`/rest/v1/eyal_rsvps?id=eq.${row.id}`,{
           method:"PATCH",
@@ -242,7 +319,9 @@
           body:JSON.stringify({
             guest_name:inputs[0].value.trim(),
             guest_count:Number(inputs[1].value),
-            note:inputs[2].value.trim()||null
+            note:inputs[2].value.trim()||null,
+            at_synagogue:syn.input.checked,
+            at_restaurant:rest.input.checked
           })
         });
         loadAll();
@@ -254,12 +333,41 @@
     return item;
   }
 
+  // create a guest from an unlinked RSVP, then link it
+  async function addRsvpToGuests(row){
+    if(!confirm(`להוסיף את ${row.guest_name} לרשימת המוזמנים?`))return;
+    try{
+      const groupName=row.rsvp_group&&CATEGORY_GROUPS[row.rsvp_group]?row.rsvp_group:null;
+      const res=await api("/rest/v1/eyal_guests",{
+        method:"POST",
+        headers:authHeaders({Prefer:"return=representation"}),
+        body:JSON.stringify({
+          guest_name:row.guest_name,
+          group_name:groupName,
+          invited_count:row.guest_count,
+          note:"נוסף מאישור הגעה"
+        })
+      });
+      const created=(await res.json())[0];
+      await api(`/rest/v1/eyal_rsvps?id=eq.${row.id}`,{
+        method:"PATCH",
+        headers:authHeaders({Prefer:"return=minimal"}),
+        body:JSON.stringify({guest_id:created.id})
+      });
+      loadAll();
+    }catch(error){
+      alert("ההוספה נכשלה. נסו שוב.");
+    }
+  }
+
   function exportCsv(){
     const guestById=Object.fromEntries(guests.map(g=>[g.id,g]));
-    const header=["שם","אורחים","הערה","מוזמן משויך","נשלח"];
+    const header=["שם","אורחים","קטגוריה","מתחם","הערה","מוזמן משויך","נשלח"];
     const lines=currentRows.map(row=>[
       row.guest_name,
       row.guest_count,
+      rsvpCategory(row)||"",
+      venueText(row),
       row.note||"",
       row.guest_id&&guestById[row.guest_id]?guestById[row.guest_id].guest_name:"",
       new Date(row.created_at).toLocaleString("he-IL")
@@ -284,26 +392,11 @@
     return digits;
   }
 
-  function renderGroupFilter(){
-    const groups=[...new Set(guests.map(g=>g.group_name).filter(Boolean))];
-    const current=groupFilter.value;
-    groupFilter.textContent="";
-    const all=document.createElement("option");
-    all.value="";
-    all.textContent="כל הקבוצות";
-    groupFilter.appendChild(all);
-    groups.forEach(name=>{
-      const opt=document.createElement("option");
-      opt.value=name;
-      opt.textContent=name;
-      groupFilter.appendChild(opt);
-    });
-    if([...groupFilter.options].some(o=>o.value===current))groupFilter.value=current;
-  }
-
   function renderGuests(){
-    renderGroupFilter();
+    fillSelect(categoryFilter,categoryPairs());
+    fillSelect(groupFilter,[["","כל הקבוצות"],...groupPairsFor(categoryFilter.value)]);
     guestList.textContent="";
+    const cat=categoryFilter.value;
     const filter=groupFilter.value;
     const linkedCounts={};
     currentRows.forEach(r=>{
@@ -311,6 +404,7 @@
     });
     const status=statusFilter.value;
     const shown=guests.filter(g=>
+      (!cat||groupToCategory(g.group_name)===cat)&&
       (!filter||g.group_name===filter)&&
       (!status||(status==="confirmed"?linkedCounts[g.id]!=null:linkedCounts[g.id]==null))
     );
@@ -350,6 +444,14 @@
     }
     const rowActions=document.createElement("div");
     rowActions.className="rsvp-item-actions";
+    if(confirmedCount==null){
+      const phoneConfirm=document.createElement("button");
+      phoneConfirm.type="button";
+      phoneConfirm.className="row-action";
+      phoneConfirm.textContent="אישור טלפוני";
+      phoneConfirm.addEventListener("click",()=>confirmByPhone(g));
+      rowActions.appendChild(phoneConfirm);
+    }
     const remind=document.createElement("button");
     remind.type="button";
     remind.className="row-action";
@@ -392,6 +494,33 @@
     rowActions.append(remind,editButton,deleteButton);
     item.appendChild(rowActions);
     return item;
+  }
+
+  // record a phone confirmation as an RSVP linked to this guest
+  async function confirmByPhone(g){
+    const raw=prompt(`כמה אנשים מגיעים (${g.guest_name})?`,String(g.invited_count||1));
+    if(raw===null)return;
+    const count=Number(raw);
+    if(!Number.isInteger(count)||count<1||count>20){
+      alert("כמות לא תקינה.");
+      return;
+    }
+    try{
+      await api("/rest/v1/eyal_rsvps",{
+        method:"POST",
+        headers:authHeaders({Prefer:"return=minimal"}),
+        body:JSON.stringify({
+          guest_name:g.guest_name,
+          guest_count:count,
+          note:"אישור טלפוני",
+          rsvp_group:groupToCategory(g.group_name),
+          guest_id:g.id
+        })
+      });
+      loadAll();
+    }catch(error){
+      alert("הרישום נכשל. נסו שוב.");
+    }
   }
 
   function renderGuestEditor(g,previousItem){
@@ -472,7 +601,7 @@
     if(!token())return;
     try{
       const [rsvpRes,guestRes]=await Promise.all([
-        api("/rest/v1/eyal_rsvps?select=id,guest_name,guest_count,note,created_at,guest_id,rsvp_group&order=created_at.desc",{headers:authHeaders()}),
+        api("/rest/v1/eyal_rsvps?select=id,guest_name,guest_count,note,created_at,guest_id,rsvp_group,at_synagogue,at_restaurant&order=created_at.desc",{headers:authHeaders()}),
         api("/rest/v1/eyal_guests?select=id,guest_name,phone,group_name,invited_count,note&order=group_name.asc,guest_name.asc",{headers:authHeaders()})
       ]);
       currentRows=await rsvpRes.json();
@@ -515,9 +644,11 @@
   addGuestButton.addEventListener("click",()=>{
     guestList.prepend(renderGuestEditor({},null));
   });
+  rsvpCategoryFilter.addEventListener("change",()=>{rsvpGroupFilter.value="";renderRows();});
+  rsvpGroupFilter.addEventListener("change",renderRows);
+  categoryFilter.addEventListener("change",()=>{groupFilter.value="";renderGuests();});
   groupFilter.addEventListener("change",renderGuests);
   statusFilter.addEventListener("change",renderGuests);
-  rsvpGroupFilter.addEventListener("change",renderRows);
   signOut.addEventListener("click",()=>{
     sessionStorage.removeItem(authKey);
     rsvpPanel.hidden=true;

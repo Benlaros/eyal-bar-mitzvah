@@ -7,7 +7,7 @@
   <meta name="description" content="הזמנה לבר המצווה של אייל, יום שני 10.8.2026, כ&quot;ז באב התשפ&quot;ו. עלייה לתורה בבית הכנסת בהר אדר וארוחת צהריים במסעדת עלאש גריל במודיעין.">
   <meta name="theme-color" content="#FAF8F2">
   <link rel="canonical" href="https://eyal-bar-mitzvah.vercel.app/">
-  <link rel="stylesheet" href="style.css?v=20260703-group">
+  <link rel="stylesheet" href="style.css?v=20260706-venues">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -136,6 +136,17 @@
           <option>חברים של אייל</option>
         </select>
       </label>
+      <fieldset class="rsvp-venues">
+        <legend>לאן תגיעו?</legend>
+        <label class="checkbox">
+          <input id="atSynagogue" name="at_synagogue" type="checkbox" checked>
+          <span>עלייה לתורה (בית הכנסת)</span>
+        </label>
+        <label class="checkbox">
+          <input id="atRestaurant" name="at_restaurant" type="checkbox" checked>
+          <span>ארוחת צהריים (מסעדה)</span>
+        </label>
+      </fieldset>
       <label>
         <span>הערה קצרה</span>
         <textarea id="guestNote" name="note" maxlength="500" rows="3"></textarea>
@@ -157,6 +168,6 @@
     </form>
   </dialog>
   <script src="supabase-config.js?v=20260703-rsvp"></script>
-  <script src="script.js?v=20260704-eventday"></script>
+  <script src="script.js?v=20260706-venues"></script>
 </body>
 </html>

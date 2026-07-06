@@ -113,10 +113,17 @@
     const count=Number(form.guest_count.value);
     const note=form.note.value.trim();
     const group=form.rsvp_group.value;
+    const atSynagogue=form.at_synagogue.checked;
+    const atRestaurant=form.at_restaurant.checked;
     const allowedGroups=["משפחה","חברים של המשפחה","חברים של אייל"];
     status.classList.remove("is-error");
     if(!name||name.length>120||!Number.isInteger(count)||count<1||count>20||note.length>500||!allowedGroups.includes(group)){
       status.textContent="כדאי לבדוק את השם וכמות האורחים.";
+      status.classList.add("is-error");
+      return;
+    }
+    if(!atSynagogue&&!atRestaurant){
+      status.textContent="בחרו לפחות מתחם אחד להגעה.";
       status.classList.add("is-error");
       return;
     }
@@ -131,7 +138,7 @@
           "Content-Type":"application/json",
           Prefer:"return=minimal"
         },
-        body:JSON.stringify({guest_name:name,guest_count:count,note:note||null,rsvp_group:group})
+        body:JSON.stringify({guest_name:name,guest_count:count,note:note||null,rsvp_group:group,at_synagogue:atSynagogue,at_restaurant:atRestaurant})
       });
       if(!res.ok)throw new Error("insert failed");
       form.reset();
