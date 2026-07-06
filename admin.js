@@ -34,7 +34,8 @@
   const invitedTotal=document.getElementById("invitedTotal");
   const guestTotal=document.getElementById("guestTotal");
   const pendingTotal=document.getElementById("pendingTotal");
-  const venueSummary=document.getElementById("venueSummary");
+  const synagogueTotal=document.getElementById("synagogueTotal");
+  const restaurantTotal=document.getElementById("restaurantTotal");
   const tabRsvps=document.getElementById("tabRsvps");
   const tabGuests=document.getElementById("tabGuests");
   const refresh=document.getElementById("refreshRsvps");
@@ -112,9 +113,8 @@
     guestTotal.textContent=String(currentRows.reduce((s,r)=>s+Number(r.guest_count||0),0));
     const linked=new Set(currentRows.map(r=>r.guest_id).filter(Boolean));
     pendingTotal.textContent=String(guests.filter(g=>!linked.has(g.id)).length);
-    const syn=currentRows.filter(r=>r.at_synagogue!==false).reduce((s,r)=>s+Number(r.guest_count||0),0);
-    const rest=currentRows.filter(r=>r.at_restaurant!==false).reduce((s,r)=>s+Number(r.guest_count||0),0);
-    venueSummary.textContent=`בית כנסת ${syn} · מסעדה ${rest}`;
+    synagogueTotal.textContent=String(currentRows.filter(r=>r.at_synagogue!==false).reduce((s,r)=>s+Number(r.guest_count||0),0));
+    restaurantTotal.textContent=String(currentRows.filter(r=>r.at_restaurant!==false).reduce((s,r)=>s+Number(r.guest_count||0),0));
   }
 
   // ---------- RSVP tab ----------
@@ -413,12 +413,15 @@
     top.append(name,meta);
     item.appendChild(top);
     const status=document.createElement("p");
-    if(confirmedCount!=null){
-      status.textContent=`✓ אישרו ${confirmedCount}`;
-      status.className="guest-status guest-status-ok";
-    }else{
+    if(confirmedCount==null){
       status.textContent="לא ענו";
       status.className="guest-status";
+    }else if(confirmedCount===0){
+      status.textContent="✗ לא מגיע";
+      status.className="guest-status guest-status-declined";
+    }else{
+      status.textContent=`✓ אישרו ${confirmedCount}`;
+      status.className="guest-status guest-status-ok";
     }
     item.appendChild(status);
     if(g.note){
@@ -434,7 +437,12 @@
       phoneConfirm.className="row-action";
       phoneConfirm.textContent="אישור טלפוני";
       phoneConfirm.addEventListener("click",()=>confirmByPhone(g));
-      rowActions.appendChild(phoneConfirm);
+      const decline=document.createElement("button");
+      decline.type="button";
+      decline.className="row-action row-action-danger";
+      decline.textContent="לא מגיע";
+      decline.addEventListener("click",()=>declineByPhone(g));
+      rowActions.append(phoneConfirm,decline);
     }
     const remind=document.createElement("button");
     remind.type="button";
@@ -497,6 +505,27 @@
           guest_name:g.guest_name,
           guest_count:count,
           note:"אישור טלפוני",
+          rsvp_group:groupToCategory(g.group_name),
+          guest_id:g.id
+        })
+      });
+      loadAll();
+    }catch(error){
+      alert("הרישום נכשל. נסו שוב.");
+    }
+  }
+
+  // record a phone "not coming" as a linked RSVP with 0 guests
+  async function declineByPhone(g){
+    if(!confirm(`לסמן ש-${g.guest_name} לא מגיע/ה?`))return;
+    try{
+      await api("/rest/v1/eyal_rsvps",{
+        method:"POST",
+        headers:authHeaders({Prefer:"return=minimal"}),
+        body:JSON.stringify({
+          guest_name:g.guest_name,
+          guest_count:0,
+          note:"לא מגיע (טלפוני)",
           rsvp_group:groupToCategory(g.group_name),
           guest_id:g.id
         })
